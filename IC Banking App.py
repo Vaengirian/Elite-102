@@ -37,23 +37,61 @@ class App(tk.Frame):
         inplist=[]
         for widgets in root2.winfo_children(): #deletes all widgets
             widgets.destroy()
+        label2 = tk.Label(root2, text="Username")
+        label2.pack()
         inputtxt = tk.Text(root2,height = 1,width = 45)
         inputtxt.pack()
+        label3 = tk.Label(root2, text="Password")
+        label3.pack()
         inputtxt2 = tk.Text(root2,height=1, width = 45)
         inputtxt2.pack()
-        userButton = tk.Button(root2, text = "Login", command = lambda: [inplist.extend([(App.printInput(inputtxt),App.printInput(inputtxt2))]),App.login(inplist)])
+        userButton = tk.Button(root2, text = "Login", command = lambda: [inplist.extend([App.printInput(inputtxt),App.printInput(inputtxt2)]),App.login(inplist)])
         userButton.pack()
-    def login(ilist):
+        quite = tk.Button(root2, text="Quit", command=App.connectionsever)
+        quite.pack()
+    def login(ilist): #actually logs in
         datalist=[]
-        userQuery = ("SELECT Username, Userpassword FROM user_information")
-        cursor.execute(userQuery)
+        userQuery = ("SELECT Username, Userpassword FROM user_information WHERE Username = %s")
+        ulist=[]
+        ulist.append(ilist[0])
+        cursor.execute(userQuery, ulist)
         for item in cursor:
-            datalist.append(item)
+            for it in item:
+                datalist.append(it)
+                print(it)
         if ilist == datalist:
             print('successful')
-        print(datalist)
-        print(ilist)
-
+            App.userinterface(ilist)
+        #print(datalist)
+        #print(ilist[0])
+    def userinterface(inlist): #brings up new interface with view, withdraw, deposit, quit, delete (quit but removes dataset)
+        #print(inlist[0])
+        for widgets in root2.winfo_children(): #deletes all widgets
+            widgets.destroy()
+        ulist2=[]
+        idlist1 = []
+        ulist2.append(inlist[0])
+        accountQuery = ("SELECT Userid FROM user_information WHERE Username = %s")
+        cursor.execute(accountQuery,ulist2)
+        for item in cursor:
+            for it in item:
+                idlist1.append(it)
+                print(it)
+        
+        ViewButton = tk.Button(root2, text="View", command=lambda: App.view(idlist1))
+        ViewButton.pack()
+        DepositButton = tk.Button(root2, text="Deposit", command=App.connectionsever)
+        DepositButton.pack()
+        WithdrawButton = tk.Button(root2, text="Withdraw", command=App.connectionsever)
+        WithdrawButton.pack()
+        quite = tk.Button(root2, text="Quit", command=App.connectionsever)
+        quite.pack()
+    def view(idlist1):
+        for widgets in root2.winfo_children(): #deletes all widgets
+            widgets.destroy()
+        balanceQuery = ("SELECT accountbalance FROM userbalance WHERE accountid = %s")
+        cursor.execute(balanceQuery,idlist1)
+        print('v')
 root2 = tk.Tk()
 root2.geometry('1000x400')
 myapp = App(root2)
