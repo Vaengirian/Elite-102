@@ -122,7 +122,7 @@ class App(tk.Frame):
         DepositButton.pack()
         WithdrawButton = tk.Button(root2, text="Withdraw", command=lambda: App.withdrawmenu(idlist1,inlist))
         WithdrawButton.pack()
-        DeleteButton = tk.Button(root2, text="Delete", command=lambda: App.deletemenu(idlist1,inlist))
+        DeleteButton = tk.Button(root2, text="Delete", command=lambda: App.delete(idlist1))
         DeleteButton.pack()
         Backe = tk.Button(root2, text="Back", command=App.firstmenu)
         Backe.pack()
@@ -209,16 +209,16 @@ class App(tk.Frame):
         label5.pack()
         Backe = tk.Button(root2, text="Back", command=lambda: App.userinterface(inlist))
         Backe.pack()
-    def deletemenu(idlist1, inlist):
+    def delete(idlist1):
         for widgets in root2.winfo_children(): #deletes all widgets
             widgets.destroy()
-        #idlist2 = [] measure1
+        #idlist2 = [] measure1 (old)
         #idlist2 = idlist1
         #deletequery = "DELETE FROM user_information WHERE Userid = %s"
         #cursor.execute(deletequery, idlist1)
         #deletequery = "DELETE FROM userbalance WHERE accountid = %s"
         #cursor.execute(deletequery, idlist1)
-        duple = (None, idlist1[0])
+        duple = (None, idlist1[0]) #measure 2
         deletequery = ("UPDATE user_information SET Username = %s WHERE Userid = %s")
         cursor.execute(deletequery, duple)
         deletequery2 = ("UPDATE user_information SET Userpassword = %s WHERE Userid = %s")
